@@ -5,10 +5,10 @@ Mostly, the capability to programmatically export and send via emails reports of
 
 ## Installation
 
-First clone it to your Kimai installation `plugins` directory:
+First clone it to the `plugins/PbariccoBundle` directory, relative to your Kimai installation :
 ```
 cd /kimai/var/plugins/
-git clone https://github.com/pietrobaricco/kimai-plugin-misc.git
+git clone https://github.com/pietrobaricco/kimai-plugin-misc.git PbariccoBundle
 ```
 
 Rebuild the cache:
