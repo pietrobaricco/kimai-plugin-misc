@@ -1,0 +1,23 @@
+{
+  "name": "pbaricco/kimai-plugin-misc",
+  "description": "Adds some useful stuff",
+  "type": "kimai-plugin",
+  "version": "0.1",
+  "require": {
+    "kimai/kimai2-composer": "*"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Pietro Baricco",
+      "email": "pietro.baricco@gmail,com"
+    }
+  ],
+  "extra": {
+    "kimai": {
+      "require": "1.3",
+      "version": "0.1",
+      "name": "PbariccoBundle"
+    }
+  }
+}
