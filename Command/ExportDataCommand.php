@@ -6,6 +6,7 @@ use App\Export\ServiceExport;
 use App\Repository\Query\TimesheetQuery;
 use App\Repository\TimesheetRepository;
 use App\Repository\UserRepository;
+use App\Repository\CustomerRepository;
 use App\User\LoginManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -33,16 +34,20 @@ class ExportDataCommand extends Command
     /** @var MailerInterface */
     protected $mailer;
 
+    private ?CustomerRepository $customerRepository;
+
     public function __construct(
         string $name = null,
         ?TimesheetRepository $repository = null,
         ?UserRepository $userRepository = null,
+        ?CustomerRepository $customerRepository,
         ?ServiceExport $exportService = null,
         ?LoginManager $loginManager = null,
         ?MailerInterface $mailer = null
     ) {
         $this->repository = $repository;
         $this->userRepository = $userRepository;
+        $this->customerRepository = $customerRepository;
         $this->exportService = $exportService;
         $this->loginManager = $loginManager;
         $this->mailer = $mailer;
@@ -106,6 +111,11 @@ class ExportDataCommand extends Command
                 $startDate->modify("first day of -$monthToSubtract month");
                 $endDate->modify("last day of -$monthToSubtract month");
             }
+            # do the same, but specify two dates (yyyy-mm-dd) separated by a pipe
+            if(preg_match('/^([0-9]{4}-[0-9]{2}-[0-9]{2})\|([0-9]{4}-[0-9]{2}-[0-9]{2})$/sim', $period, $m)) {
+                $startDate = new \DateTime($m[1]);
+                $endDate = new \DateTime($m[2]);
+            }
         }
 
         $startDate->setTime(0, 0);
@@ -113,8 +123,10 @@ class ExportDataCommand extends Command
         $query->setBegin($startDate);
         $query->setEnd($endDate);
 
-        if($customerId)
-            $query->setCustomers([$customerId]);
+        if($customerId)  {
+            $customers = $this->customerRepository->findByIds([$customerId]);
+            $query->setCustomers($customers);
+        }
 
         $title = "$customTitle Timesheet data from ".$startDate->format($dateFormat)." to ".$endDate->format($dateFormat);
         $output->writeln("Exporting $title");
