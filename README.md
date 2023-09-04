@@ -26,3 +26,6 @@ php bin/console kimai:export:timesheet johndoe xlsx --customer_id=1 --period=wee
 ```
 
 check the command source for a full list of the supported options
+
+
+sterc
